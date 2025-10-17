@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>رستوران رامبد - سفارش آنلاین غذا</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Vazirmatn', 'Segoe UI', Tahoma, sans-serif;
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 25%, #16213e 50%, #1a1a2e 75%, #0f0f1e 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.15;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .shape1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, #ff6b35, transparent);
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .shape2 {
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, #f7931e, transparent);
+            top: 60%;
+            right: 15%;
+            animation-delay: 5s;
+        }
+
+        .shape3 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, #ff6b35, transparent);
+            bottom: -10%;
+            left: 50%;
+            animation-delay: 10s;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 107, 53, 0.5);
+            border-radius: 50%;
+            animation: particleFloat 15s infinite linear;
+        }
+
+        /* Header */
+        header {
+            background: rgba(15, 15, 30, 0.7);
+            backdrop-filter: blur(20px);
+            padding: 1.5rem 5%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 107, 53, 0.2);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b35, #f7931e, #ffb347);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(255, 107, 53, 0.5);
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            position: relative;
+            padding: 0.5rem 1rem;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+            border-radius: 8px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .nav-links a:hover::before {
+            opacity: 1;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b35, #f7931e);
+            transition: width 0.3s;
+        }
+
+        .nav-links a:hover::after {
+            width: 80%;
+        }
+
+        .cart-btn {
+            background: linear-gradient(135deg, #ff6b35, #f7931e, #ff8c42);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s;
+            box-shadow: 0 5px 25px rgba(255, 107, 53, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .cart-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .cart-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .cart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 35px rgba(255, 107, 53, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Hero Section */
+        .hero {
+            margin-top: 80px;
+            padding: 6rem 5% 4rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255, 107, 53, 0.15) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease;
+            background: linear-gradient(45deg, #fff, #ff6b35, #f7931e, #fff);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientText 5s ease infinite, fadeInUp 1s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            color: #ddd;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease 0.2s backwards;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Luxury Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            animation: fadeInUp 1s ease 0.4s backwards;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            padding: 1.2rem 3rem;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.6s;
+        }
+
+        .tab-btn:hover::before {
+            left: 100%;
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #ff6b35, #f7931e, #ff8c42);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 30px rgba(255, 107, 53, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            transform: scale(1.05) translateY(-5px);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(255, 107, 53, 0.15);
+            border-color: #ff6b35;
+            transform: translateY(-3px);
+        }
+
+        /* Menu Grid */
+        .menu-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 5%;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .menu-item {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        .menu-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 107, 53, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .menu-item:hover::before {
+            left: 100%;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: 0 20px 50px rgba(255, 107, 53, 0.4), 0 0 0 1px rgba(255, 107, 53, 0.5);
+            border-color: #ff6b35;
+        }
+
+        .item-image {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .item-image::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 255, 255, 0.05) 10px,
+                rgba(255, 255, 255, 0.05) 20px
+            );
+            animation: shimmer 20s linear infinite;
+        }
+
+        .item-details {
+            padding: 1.5rem;
+        }
+
+        .item-details h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .item-details p {
+            color: #ccc;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .item-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .price {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #f7931e, #ff6b35);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #ff6b35, #f7931e, #ff8c42);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.4s;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .add-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .add-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .add-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 25px rgba(255, 107, 53, 0.5);
+        }
+
+        /* Custom Order Section - REDESIGNED */
+        .custom-order {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 25px;
+            padding: 3rem;
+            margin: 2rem auto;
+            max-width: 1000px;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 10px 50px rgba(0, 0, 0, 0.4);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .order-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, #ff6b35, #f7931e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(255, 107, 53, 0.3);
+        }
+
+        .food-request-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .request-input {
+            flex: 1;
+            padding: 1.5rem;
+            border-radius: 15px;
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 1.1rem;
+            resize: none;
+            font-family: inherit;
+            transition: all 0.3s;
+            min-height: 200px;
+        }
+
+        .request-input:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 25px rgba(255, 107, 53, 0.3);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .request-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .send-request-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #ff6b35, #f7931e, #ff8c42);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            padding: 1.2rem 2rem;
+            border-radius: 50px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.4s;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.4);
+        }
+
+        .send-request-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .send-request-btn:hover::before {
+            width: 400px;
+            height: 400px;
+        }
+
+        .send-request-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(255, 107, 53, 0.6);
+        }
+
+        /* Integrated Chef Chat */
+        .chef-chat-section {
+            display: flex;
+            flex-direction: column;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 107, 53, 0.2);
+        }
+
+        .chat-messages-custom {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            min-height: 300px;
+            max-height: 400px;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+        }
+
+        .message {
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            max-width: 85%;
+            animation: fadeIn 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .message.chef {
+            background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(247, 147, 30, 0.2));
+            align-self: flex-start;
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 15px 15px 15px 5px;
+        }
+
+        .message.user {
+            background: rgba(255, 255, 255, 0.1);
+            align-self: flex-end;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px 15px 5px 15px;
+        }
+
+        .chat-input-container-custom {
+            display: flex;
+            gap: 0.8rem;
+            margin-top: auto;
+        }
+
+        .chat-input-custom {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border-radius: 25px;
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .chat-input-custom:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .send-chat-btn {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1rem;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+
+        .send-chat-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.5);
+        }
+
+        /* Cart */
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: linear-gradient(135deg, #f7931e, #ff6b35);
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: bold;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 2px 10px rgba(255, 107, 53, 0.5);
+            animation: bounce 2s infinite;
+        }
+
+        /* Animations */
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes logoGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5)); }
+            50% { filter: drop-shadow(0 0 20px rgba(255, 107, 53, 0.8)); }
+        }
+
+        @keyframes gradientText {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, 0) scale(1); opacity: 0.15; }
+            50% { transform: translate(-50%, 0) scale(1.1); opacity: 0.25; }
+        }
+
+        @keyframes shimmer {
+            from { transform: translate(-50%, -50%) rotate(45deg); }
+            to { transform: translate(-50%, -50%) rotate(405deg); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .custom-order {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .hero h1 { font-size: 2.5rem; }
+            .nav-links { display: none; }
+            .tabs { flex-direction: column; gap: 1rem; padding: 0 1rem; }
+            .menu-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #ff6b35, #f7931e);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg"></div>
+    <div class="floating-shapes">
+        <div class="shape shape1"></div>
+        <div class="shape shape2"></div>
+        <div class="shape shape3"></div>
+    </div>
+    <div class="particles" id="particles"></div>
+
+    <header>
+        <nav>
+            <div class="logo">🍽️ Rambod Restourant</div>
+            <ul class="nav-links">
+                <li><a href="#menu">منو</a></li>
+                <li><a href="#custom">سفارش شخصی</a></li>
+                <li><a href="#about">درباره ما</a></li>
+            </ul>
+            <button class="cart-btn" onclick="showCart()">
+                <span style="position: relative; z-index: 1;">سبد خرید</span>
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>تجربه طعم بی‌نظیر</h1>
+        <p>بهترین غذاها را با یک کلیک سفارش دهید</p>
+    </section>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('ready')">غذاهای آماده</button>
+        <button class="tab-btn" onclick="switchTab('custom')">سفارش شخصی</button>
+    </div>
+
+    <div class="menu-container">
+        <div id="ready-menu" class="tab-content active">
+            <div class="menu-grid" id="readyMenuGrid"></div>
+        </div>
+
+        <div id="custom-menu" class="tab-content">
+            <div class="custom-order">
+                <div class="order-section">
+                    <h2 class="section-title">🍳 سفارش غذای دلخواه</h2>
+                    <div class="food-request-area">
+                        <textarea 
+                            class="request-input" 
+                            id="foodRequest"
+                            placeholder="غذای مورد نظر خود را با جزئیات کامل توضیح دهید...
+
+مثال:
+یک پیتزای بزرگ با پنیر موزارلا، قارچ تازه، فلفل دلمه‌ای، زیتون و سس گوجه فرنگی خانگی. خمیر نازک و ترد.
+
+یا:
+
+کباب کوبیده ویژه با برنج زعفرانی، گوجه کبابی و سالاد فصل. گوشت مخلوط گوساله و گوسفند."></textarea>
+                        <button class="send-request-btn" onclick="sendFoodRequest()">
+                            <span style="position: relative; z-index: 1;">ارسال درخواست به سرآشپز 👨‍🍳</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="order-section">
+                    <h2 class="section-title">💬 چت با سرآشپز</h2>
+                    <div class="chef-chat-section">
+                        <div class="chat-messages-custom" id="chatMessagesCustom">
+                            <div class="message chef">
+                                سلام! من سرآشپز شما هستم. لطفاً سفارش خود را در قسمت کنار بنویسید یا اینجا با من گفتگو کنید 👨‍🍳
+                            </div>
+                        </div>
+                        <div class="chat-input-container-custom">
+                            <input 
+                                type="text" 
+                                class="chat-input-custom" 
+                                id="chatInputCustom" 
+                                placeholder="پیام خود را بنویسید..."
+                                onkeypress="handleCustomChatEnter(event)">
+                            <button class="send-chat-btn" onclick="sendCustomMessage()">ارسال</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Create particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 15 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Menu Data
+        const readyMenu = [
+            { id: 1, name: 'چلو کباب کوبیده', price: '350,000', emoji: '🍖', desc: 'کباب کوبیده مخصوص با برنج ایرانی و گوجه کبابی' },
+            { id: 2, name: 'پیتزا پپرونی', price: '280,000', emoji: '🍕', desc: 'پیتزای ایتالیایی با پپرونی و پنیر موزارلا' },
+            { id: 3, name: 'برگر مخصوص', price: '220,000', emoji: '🍔', desc: 'برگر گوشت با سس مخصوص و سبزیجات تازه' },
+            { id: 4, name: 'سوشی میکس', price: '450,000', emoji: '🍣', desc: 'ترکیبی از بهترین سوشی‌های ژاپنی' },
+            { id: 5, name: 'پاستا آلفردو', price: '260,000', emoji: '🍝', desc: 'پاستا با سس خامه‌ای و قارچ' },
+            { id: 6, name: 'سالاد سزار', price: '180,000', emoji: '🥗', desc: 'سالاد سزار با مرغ گریل و پنیر پارمزان' }
+        ];
+
+        let cart = [];
+
+        // Initialize Menu
+        function initMenu() {
+            const grid = document.getElementById('readyMenuGrid');
+            readyMenu.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'menu-item';
+                div.innerHTML = `
+                    <div class="item-image">${item.emoji}</div>
+                    <div class="item-details">
+                        <h3>${item.name}</h3>
+                        <p>${item.desc}</p>
+                        <div class="item-footer">
+                            <span class="price">${item.price} تومان</span>
+                            <button class="add-btn" onclick="addToCart(${item.id})">
+                                <span style="position: relative; z-index: 1;">افزودن</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(div);
+            });
+        }
+
+        // Tab Switching
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + '-menu').classList.add('active');
+        }
+
+        // Add to Cart
+        function addToCart(id) {
+            const item = readyMenu.find(i => i.id === id);
+            cart.push(item);
+            updateCartCount();
+            showNotification('غذا به سبد خرید اضافه شد! ✅');
+        }
+
+        function updateCartCount() {
+            document.getElementById('cartCount').textContent = cart.length;
+        }
+
+        function showCart() {
+            if (cart.length === 0) {
+                showNotification('سبد خرید شما خالی است! 🛒');
+            } else {
+                let message = 'سبد خرید شما:\n\n';
+                let total = 0;
+                cart.forEach(item => {
+                    message += `${item.name} - ${item.price} تومان\n`;
+                    total += parseInt(item.price.replace(',', ''));
+                });
+                message += `\n━━━━━━━━━━━━━━\nجمع کل: ${total.toLocaleString()} تومان`;
+                alert(message);
+            }
+        }
+
+        // Send Food Request
+        function sendFoodRequest() {
+            const request = document.getElementById('foodRequest').value.trim();
+            
+            if (request) {
+                addCustomMessage('سفارش شما: ' + request, 'user');
+                document.getElementById('foodRequest').value = '';
+                
+                setTimeout(() => {
+                    const responses = [
+                        'درخواست شما دریافت شد! بررسی می‌کنم و در چند دقیقه جواب می‌دم 👨‍🍳',
+                        'عالی! این سفارش خیلی جالبه. زمان آماده‌سازی حدود 35-45 دقیقه است ⏱️',
+                        'سفارش شما ثبت شد. برای این غذا از بهترین مواد اولیه استفاده می‌کنیم 🌟',
+                        'درخواست شما خیلی خوبه! آیا ترجیح خاصی برای طعم یا تندی دارید? 🤔',
+                        'بله حتماً! این غذا رو می‌تونم برای شما آماده کنم. قیمت تقریبی رو بعد محاسبه بهتون اطلاع می‌دم 💰'
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addCustomMessage(randomResponse, 'chef');
+                }, 1500);
+                
+                showNotification('سفارش شما ارسال شد! 📤');
+            } else {
+                showNotification('لطفاً ابتدا سفارش خود را بنویسید ⚠️');
+            }
+        }
+
+        // Custom Chat
+        function sendCustomMessage() {
+            const input = document.getElementById('chatInputCustom');
+            const message = input.value.trim();
+            
+            if (message) {
+                addCustomMessage(message, 'user');
+                input.value = '';
+                
+                setTimeout(() => {
+                    const responses = [
+                        'بله، حتما! این غذا در دسترس است و می‌تونم براتون آماده کنم 👍',
+                        'این یک انتخاب عالی است! زمان آماده‌سازی حدود 30 دقیقه است ⏱️',
+                        'می‌تونیم این غذا رو طبق سلیقه شما آماده کنیم. چیز خاصی میخواید اضافه یا کم بشه؟ 🍴',
+                        'برای سفارش شما بهترین مواد اولیه و تازه‌ترین محصولات رو استفاده می‌کنیم ⭐',
+                        'آیا ترجیح خاصی برای طرز تهیه دارید؟ مثلاً تند یا ملایم؟ 🤔',
+                        'عالیه! این غذا یکی از محبوب‌ترین سفارش‌هامونه. تضمین کیفیت می‌دم 💯',
+                        'سفارش شما ثبت شد. آیا میل دارید پیش غذا یا نوشیدنی هم اضافه کنید? 🥤'
+                    ];
+                    const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+                    addCustomMessage(randomResponse, 'chef');
+                }, 1000);
+            }
+        }
+
+        function addCustomMessage(text, sender) {
+            const messagesContainer = document.getElementById('chatMessagesCustom');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            messageDiv.textContent = text;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function handleCustomChatEnter(e) {
+            if (e.key === 'Enter') {
+                sendCustomMessage();
+            }
+        }
+
+        // Notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 100px;
+                right: 20px;
+                background: linear-gradient(135deg, #ff6b35, #f7931e);
+                color: white;
+                padding: 1rem 2rem;
+                border-radius: 15px;
+                box-shadow: 0 8px 30px rgba(255, 107, 53, 0.6);
+                z-index: 9999;
+                animation: slideInRight 0.5s ease;
+                border: 2px solid rgba(255, 255, 255, 0.2);
+                backdrop-filter: blur(10px);
+                font-size: 1.1rem;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.5s ease';
+                setTimeout(() => notification.remove(), 500);
+            }, 3000);
+        }
+
+        // Add notification animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    opacity: 0;
+                    transform: translateX(100px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+            @keyframes slideOutRight {
+                from {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+                to {
+                    opacity: 0;
+                    transform: translateX(100px);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize
+        createParticles();
+        initMenu();
+    </script>
+</body>
+</html>
